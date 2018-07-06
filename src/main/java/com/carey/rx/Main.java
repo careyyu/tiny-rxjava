@@ -2,8 +2,9 @@ package com.carey.rx;
 
 /**
  * 核心概念
- * Observable 与 Observer
+ * Observable 与 Observer(Subscribe)
  * 装饰器
+ * 所有的操作都是在Observable和Subcribe上做装饰
  * Created by carey on 2018/7/5 20:36:06.
  */
 public class Main {

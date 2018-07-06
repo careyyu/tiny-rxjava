@@ -137,6 +137,12 @@ public class Observable<T> {
     public interface DataSource<T> {
         /**
          * 绑定数据消费者并开始给下游发送消息
+         *
+         * 框架使用OnSubscribe命名还是有道理的。在开始订阅的时候开始发送数据。
+         * 在这里面先后调用
+         * subscribe.onStart
+         * subscribe.onNext
+         * subscribe.onComplete
          * @param subscriber
          */
         void bind(Subscriber<? super T> subscriber);
