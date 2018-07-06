@@ -7,7 +7,7 @@ package com.carey.rx;
  * 所有的操作都是在Observable和Subcribe上做装饰
  * Created by carey on 2018/7/5 20:36:06.
  */
-public class Main {
+public class Example {
     public static void main(String[] args) {
 //        simple();
 //        transform();
@@ -172,7 +172,7 @@ public class Main {
                     }
                 });
     }
-    private abstract static class SimpleSubscriber<T> extends Subscriber<T> {
+    private abstract static class SimpleSubscriber<T> implements Subscriber<T> {
 
         @Override
         public void onCompleted() {

@@ -1,8 +1,19 @@
 package com.carey.rx;
 
 
-public abstract class Subscriber<T> implements Observer<T> {
-    public void onStart() {
+/**
+ * 消息订阅者
+ * 主要逻辑在onNext中处理
+ * @param <T>
+ */
+public interface Subscriber<T> {
+    default void onStart() {
         System.out.println("onStart" + Thread.currentThread());
     }
+
+    void onCompleted();
+
+    void onError(Throwable t);
+
+    void onNext(T var1);
 }
