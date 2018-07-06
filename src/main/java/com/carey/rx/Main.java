@@ -10,7 +10,7 @@ public class Main {
     public static void main(String[] args) {
 //        simple();
 //        transform();
-        observeOnThentransform();
+//        observeOnThentransform();
 //    asySubscribeOn();
 //    asyObserveOn();
 //        Scheduler scheduler = Schedulers.io();
@@ -18,6 +18,7 @@ public class Main {
 //        worker.schedule(()->{
 //            System.out.println(Thread.currentThread());
 //        });
+        skip();
     }
 
     /**
@@ -153,6 +154,23 @@ public class Main {
     }
 
 
+    private static void skip() {
+        Observable.create(new Observable.DataSource<Integer>() {
+            @Override
+            public void bind(Subscriber<? super Integer> subscriber) {
+                for (int i = 0; i < 10; i++) {
+                    subscriber.onNext(i);
+                }
+            }
+        })
+                .skip(2)
+                .subscribe(new SimpleSubscriber<Integer>() {
+                    @Override
+                    public void onNext(Integer var1) {
+                        System.out.println(var1);
+                    }
+                });
+    }
     private abstract static class SimpleSubscriber<T> extends Subscriber<T> {
 
         @Override

@@ -46,6 +46,12 @@ public class Observable<T> {
         return create(new MapDataSource<T, R>(this, transformer));
     }
 
+
+
+    public Observable<T> skip(int i) {
+        return create(new SkipDataSource<T>(this, i));
+    }
+
     /**
      * 异步切线程 事件源的操作也在异步线程中
      * .subscribeOn()
