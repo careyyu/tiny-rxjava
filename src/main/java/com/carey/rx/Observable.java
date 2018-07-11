@@ -17,6 +17,7 @@ public class Observable<T> {
 
     /**
      * 创建一个数据源
+     *
      * @param dataSource
      * @param <T>
      * @return
@@ -27,6 +28,7 @@ public class Observable<T> {
 
     /**
      * 绑定一个事件处理者，并告诉事件源 开始发送事件
+     *
      * @param subscriber
      */
     public void subscribe(Subscriber<? super T> subscriber) {
@@ -38,6 +40,7 @@ public class Observable<T> {
      * 创建出一个新的Observable传递下去
      * 同时也创建了一个新的数据源(对老的数据源做了装饰)，
      * 在数据发送的时候可以做一些操作
+     *
      * @param transformer
      * @param <R>
      * @return
@@ -47,6 +50,12 @@ public class Observable<T> {
     }
 
 
+    public static <R, T1, T2> Observable<R> zip(Observable<T1> o1, Observable<T2> o2, Func<? super T1, ? super T2, ? extends R> func) {
+        Observable[] observables = new Observable[2];
+        observables[0] = o1;
+        observables[1] = o2;
+        return create(new ZipDataSource(observables, func));
+    }
 
     public Observable<T> skip(int i) {
         return create(new SkipDataSource<T>(this, i));
@@ -57,6 +66,7 @@ public class Observable<T> {
      * .subscribeOn()
      * .subscribeOn()
      * 只有第一个会生效，也会创建多个线程池
+     *
      * @param scheduler
      * @return
      */
@@ -78,14 +88,15 @@ public class Observable<T> {
 
     /**
      * 异步切线程 只有订阅者的处理事件在异步线程中
-     *
+     * <p>
      * .observeOn()
      * .observeOn()
      * 会创建多个线程， 但是在最后一个线程中执行
+     *
      * @param scheduler
      * @return
      */
-    public Observable<T> observeOn(final Scheduler scheduler, int i ) {
+    public Observable<T> observeOn(final Scheduler scheduler, int i) {
         return Observable.create(new DataSource<T>() {
             final int index = i;
 
@@ -132,17 +143,19 @@ public class Observable<T> {
 
     /**
      * 数据源
+     *
      * @param <T>
      */
     public interface DataSource<T> {
         /**
          * 绑定数据消费者并开始给下游发送消息
-         *
+         * <p>
          * 框架使用OnSubscribe命名还是有道理的。在开始订阅的时候开始发送数据。
          * 在这里面先后调用
          * subscribe.onStart
          * subscribe.onNext
          * subscribe.onComplete
+         *
          * @param subscriber
          */
         void bind(Subscriber<? super T> subscriber);
