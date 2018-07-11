@@ -12,14 +12,14 @@ public class Example {
 //        simple();
 //        transform();
 //        observeOnThentransform();
-//    asySubscribeOn();
+        asySubscribeOn();
 //    asyObserveOn();
 //        Scheduler scheduler = Schedulers.io();
 //        Scheduler.Worker worker = scheduler.createWorker();
 //        worker.schedule(()->{
 //            System.out.println(Thread.currentThread());
 //        });
-        skip();
+//        skip();
     }
 
     /**
@@ -97,12 +97,12 @@ public class Example {
                 }
             }
         })
-                .observeOn(Schedulers.io(),1)
-                .observeOn(Schedulers.io(),2)
+                .observeOn(Schedulers.io(), 1)
+                .observeOn(Schedulers.io(), 2)
                 .map(new Transformer<Integer, String>() {
                     @Override
                     public String call(Integer from) {
-                        System.out.println( Thread.currentThread() + "mapping ");
+                        System.out.println(Thread.currentThread() + "mapping ");
                         return "maping " + from;
                     }
                 })
@@ -133,6 +133,9 @@ public class Example {
                         System.out.println(var1);
                     }
                 });
+
+        //由于异步，这段会先输出
+        System.out.println("ending");
     }
 
 
@@ -144,7 +147,7 @@ public class Example {
                 subscriber.onNext(1);
             }
         })
-                .observeOn(Schedulers.io(),1)
+                .observeOn(Schedulers.io(), 1)
                 .subscribe(new SimpleSubscriber<Integer>() {
                     @Override
                     public void onNext(Integer var1) {
@@ -172,6 +175,7 @@ public class Example {
                     }
                 });
     }
+
     private abstract static class SimpleSubscriber<T> implements Subscriber<T> {
 
         @Override
