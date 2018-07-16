@@ -22,13 +22,16 @@ public class ZipDataSource<T, P, R> implements Observable.DataSource<R> {
         this.func = func;
         this.convertResult = (R[]) new Object[origins.length];
         this.queues = new ArrayDeque[origins.length];
+        for (int i =origins.length -1; i>=0;i--) {
+            queues[i] = new ArrayDeque();
+        }
     }
 
     @Override
     public void bind(Subscriber<? super R> subscriber) {
         int i = 0;
         for (Observable o : origins) {
-            i++;
+
             final Queue q = queues[i];
             o.subscribe(new Subscriber() {
                 @Override
@@ -46,6 +49,7 @@ public class ZipDataSource<T, P, R> implements Observable.DataSource<R> {
                     q.offer(var1);
                 }
             });
+            i++;
         }
 
         while (true) {

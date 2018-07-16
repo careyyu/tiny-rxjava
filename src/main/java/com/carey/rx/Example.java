@@ -12,13 +12,14 @@ public class Example {
 //        simple();
 //        transform();
 //        observeOnThentransform();
-        asySubscribeOn();
+//        asySubscribeOn();
 //    asyObserveOn();
 //        Scheduler scheduler = Schedulers.io();
 //        Scheduler.Worker worker = scheduler.createWorker();
 //        worker.schedule(()->{
 //            System.out.println(Thread.currentThread());
 //        });
+        testZip();
 //        skip();
     }
 
@@ -174,6 +175,39 @@ public class Example {
                         System.out.println(var1);
                     }
                 });
+    }
+
+
+    public static void testZip() {
+        Observable<Integer> o1=  Observable.create(new Observable.DataSource<Integer>() {
+            @Override
+            public void bind(Subscriber<? super Integer> subscriber) {
+                for (int i = 0; i < 10; i++) {
+                    subscriber.onNext(i);
+                }
+            }
+        });
+        Observable<Integer> o2=  Observable.create(new Observable.DataSource<Integer>() {
+            @Override
+            public void bind(Subscriber<? super Integer> subscriber) {
+                for (int i = 10; i < 20; i++) {
+                    subscriber.onNext(i);
+                }
+            }
+        });
+        Observable.zip(o1, o2, new Func<Integer, Integer, Object>() {
+
+            @Override
+            public Object apply(Integer integer, Integer integer2) {
+                return integer + integer2;
+            }
+        }).subscribe(new SimpleSubscriber<Object>() {
+            @Override
+            public void onNext(Object var1) {
+                System.out.println("Subscriber handle data @ " + Thread.currentThread().getName());
+                System.out.println(var1);
+            }
+        });
     }
 
     private abstract static class SimpleSubscriber<T> implements Subscriber<T> {
