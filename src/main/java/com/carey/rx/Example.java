@@ -12,8 +12,8 @@ public class Example {
 //        simple();
 //        transform();
 //        observeOnThentransform();
-//        asySubscribeOn();
-    asyObserveOn();
+        asySubscribeOn();
+//    asyObserveOn();
 //        Scheduler scheduler = Schedulers.io();
 //        Scheduler.Worker worker = scheduler.createWorker();
 //        worker.schedule(()->{
@@ -126,7 +126,8 @@ public class Example {
                 subscriber.onNext(1);
             }
         })
-                .subscribeOn(Schedulers.io())
+                .subscribeOn(Schedulers.s1)
+                .subscribeOn(Schedulers.s2)
                 .subscribe(new SimpleSubscriber<Integer>() {
                     @Override
                     public void onNext(Integer var1) {

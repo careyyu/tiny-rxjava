@@ -79,6 +79,7 @@ public class Observable<T> {
                 scheduler.createWorker().schedule(new Runnable() {
                     @Override
                     public void run() {
+                        System.out.println("111" + Thread.currentThread());
                         Observable.this.dataSource.bind(subscriber);
                     }
                 });
