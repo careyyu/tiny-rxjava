@@ -74,7 +74,7 @@ public class Observable<T> {
         return Observable.create(new DataSource<T>() {
             @Override
             public void bind(Subscriber<? super T> subscriber) {
-//                subscriber.onStart();
+                //subscriber.onStart();
                 // 将事件生产切换到新的线程
                 scheduler.createWorker().schedule(new Runnable() {
                     @Override
@@ -98,7 +98,6 @@ public class Observable<T> {
      */
     public Observable<T> observeOn(final Scheduler scheduler, int i) {
         return Observable.create(new DataSource<T>() {
-            final int index = i;
 
             public void bind(final Subscriber<? super T> subscriber) {
 //
@@ -130,7 +129,6 @@ public class Observable<T> {
                         worker.schedule(new Runnable() {
                             @Override
                             public void run() {
-                                System.out.println(Thread.currentThread() + String.valueOf(index));
                                 subscriber.onNext(var1);
                             }
                         });
@@ -156,6 +154,8 @@ public class Observable<T> {
          * subscribe.onNext
          * subscribe.onComplete
          *
+         * TODO
+         * 实际的流逻辑在数据源中已经定义好了。这层逻辑可以抽象出来。让datasource单纯的获取数据
          * @param subscriber
          */
         void bind(Subscriber<? super T> subscriber);
