@@ -13,13 +13,13 @@ public class Example {
 //        transform();
 //        observeOnThentransform();
 //        asySubscribeOn();
-//    asyObserveOn();
+    asyObserveOn();
 //        Scheduler scheduler = Schedulers.io();
 //        Scheduler.Worker worker = scheduler.createWorker();
 //        worker.schedule(()->{
 //            System.out.println(Thread.currentThread());
 //        });
-        testZip();
+//        testZip();
 //        skip();
     }
 
@@ -130,8 +130,7 @@ public class Example {
                 .subscribe(new SimpleSubscriber<Integer>() {
                     @Override
                     public void onNext(Integer var1) {
-                        System.out.println("Subscriber handle data @ " + Thread.currentThread().getName());
-                        System.out.println(var1);
+                        System.out.println(var1 + "Subscriber handle data @ " + Thread.currentThread());
                     }
                 });
 
@@ -146,16 +145,18 @@ public class Example {
             public void bind(Subscriber<? super Integer> subscriber) {
                 System.out.println("send a data@ " + Thread.currentThread().getName());
                 subscriber.onNext(1);
+//                subscriber.onNext(2);
             }
         })
-                .observeOn(Schedulers.io(), 1)
+                .observeOn(Schedulers.s1, 1)
+                .observeOn(Schedulers.s2, 1)
                 .subscribe(new SimpleSubscriber<Integer>() {
                     @Override
                     public void onNext(Integer var1) {
-                        System.out.println("Subscriber handle data @ " + Thread.currentThread().getName());
-                        System.out.println(var1);
+                        System.out.println(var1 + "Subscriber handle data @ " + Thread.currentThread());
                     }
-                });
+                })
+        ;
     }
 
 

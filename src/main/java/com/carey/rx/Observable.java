@@ -101,8 +101,9 @@ public class Observable<T> {
 
             public void bind(final Subscriber<? super T> subscriber) {
 //
-                System.out.println("i'am bing observeOn");
+                System.out.println("i'am bing observeOn" + Thread.currentThread());
                 final Scheduler.Worker worker = scheduler.createWorker();
+                //装饰了一个新的数据观察者， 把当前的work传入进来了
                 Observable.this.dataSource.bind(new Subscriber<T>() {
                     @Override
                     public void onCompleted() {
@@ -129,6 +130,8 @@ public class Observable<T> {
                         worker.schedule(new Runnable() {
                             @Override
                             public void run() {
+                                System.out.println("111" + Thread.currentThread());
+                                //最后一层的observeOn才是最底层执行的subscribe
                                 subscriber.onNext(var1);
                             }
                         });
@@ -138,6 +141,60 @@ public class Observable<T> {
         });
     }
 
+
+    /**
+     * 异步切线程 只有订阅者的处理事件在异步线程中
+     * <p>
+     * .observeOn()
+     * .observeOn()
+     * 会创建多个线程， 但是在最后一个线程中执行
+     *
+     * @param scheduler
+     * @return
+     */
+    public Observable<T> observeOn(final Scheduler scheduler) {
+        return Observable.create(new DataSource<T>() {
+
+            public void bind(final Subscriber<? super T> subscriber) {
+                System.out.println("i'am bing observeOn" + Thread.currentThread());
+                final Scheduler.Worker worker = scheduler.createWorker();
+
+                Observable.this.dataSource.bind(new Subscriber<T>() {
+                    @Override
+                    public void onCompleted() {
+                        worker.schedule(new Runnable() {
+                            @Override
+                            public void run() {
+                                subscriber.onCompleted();
+                            }
+                        });
+                    }
+
+                    @Override
+                    public void onError(Throwable t) {
+                        worker.schedule(new Runnable() {
+                            @Override
+                            public void run() {
+                                subscriber.onError(t);
+                            }
+                        });
+                    }
+
+                    @Override
+                    public void onNext(final T var1) {
+                        worker.schedule(new Runnable() {
+                            @Override
+                            public void run() {
+                                System.out.println("111" + Thread.currentThread());
+                                //最后一层的observeOn才是最底层执行的subscribe
+                                subscriber.onNext(var1);
+                            }
+                        });
+                    }
+                });
+            }
+        });
+    }
 
     /**
      * 数据源
