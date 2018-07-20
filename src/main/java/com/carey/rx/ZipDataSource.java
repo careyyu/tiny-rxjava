@@ -3,7 +3,6 @@ package com.carey.rx;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Queue;
-import java.util.concurrent.ConcurrentLinkedDeque;
 
 /**
  * 将原有的数据源的数据全部提取出来，分别保存到一个queue中，然后依次从queue中将数据取出来
@@ -12,7 +11,6 @@ import java.util.concurrent.ConcurrentLinkedDeque;
 public class ZipDataSource<T, P, R> implements Observable.DataSource<R> {
     private Observable[] origins;
     private final Func<T, P, R> func;
-    //    private ZipSourceAdaptor[] zipSourceAdaptors;
     private final Queue[] queues;
     private R[] convertResult;
 
